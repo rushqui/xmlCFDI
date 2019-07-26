@@ -27,19 +27,28 @@ mab_entrega.set('codigoPostal', '')
 
 mab_detalles = ET.SubElement(mab_factura, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Detalles")
 
+consecutive = 0
 
 for concepto in rootRead.iter('{http://www.sat.gob.mx/cfd/3}Concepto'):
+    consecutive = consecutive + 1
+    cantidad_str =  concepto.get('Cantidad')
+    unidad_str = concepto.get('Unidad')
+    importe_str = concepto.get('Importe')
+
+    importe_flt = float(importe_str)
+
     print(concepto.get('Descripcion'))
+    print(importe_flt)
     
     mab_detalle = ET.SubElement(mab_detalles, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Detalle")
-    mab_detalle.set('noLineaArticulo', '')
+    mab_detalle.set('noLineaArticulo', str(consecutive))
     mab_detalle.set('codigoArticulo', '')
 
     descripcion_product = concepto.get('Descripcion')
     mab_detalle.set('descripcion', descripcion_product)
     
-    mab_detalle.set('unidad', '')
-    mab_detalle.set('cantidad', '')
+    mab_detalle.set('unidad', unidad_str)
+    mab_detalle.set('cantidad', cantidad_str)
     mab_detalle.set('precioSinIva', '')
     mab_detalle.set('precioConIva', '')
     mab_detalle.set('importeSinIva', '')
