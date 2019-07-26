@@ -1,3 +1,5 @@
-docs_generados/**
 .DS_Store
 .vscode
+docs_generados/Addenda.xml
+docs_generados/Factura.xml
+docs_generados/FacturaConAddenda.xml
