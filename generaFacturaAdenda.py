@@ -1,13 +1,14 @@
 from xml.etree import ElementTree as ET
 from adendaPdf import get_num_pedido
 from adendaPdf import get_num_proveedor
+from common import wahio
 import os
 
 dir_docs = 'docs_generados/'
 try:
     os.mkdir(dir_docs)
 except:
-    print("Ya exite la carpeta 'docs_generados'")
+    print("Ya existe la carpeta 'docs_generados'")
 
 ET.register_namespace('mabe', "http://recepcionfe.mabempresa.com/cfd/addenda/v1")
 
@@ -38,7 +39,13 @@ root.set('referencia1',rootRead.get('Folio'))
 
 mab_moneda = ET.SubElement(root,"{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Moneda")
 mab_moneda.set('tipoMoneda', rootRead.get('Moneda'))
-mab_moneda.set('importeConLetra','')
+total_str = rootRead.get('Total')
+split_total = total_str.split('.')
+print(split_total[0])
+total_flt = int(split_total[0])
+total_text = list(filter(None, wahio(total_flt)))
+
+mab_moneda.set('importeConLetra',' '.join(total_text))
 
 mab_proveedor = ET.SubElement(root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Proveedor")
 mab_proveedor.set('codigo', '')
@@ -100,8 +107,8 @@ mab_traslado.set('importe', total_traslados)
 mab_retenciones = ET.SubElement(root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Retenciones")
 
 mab_total = ET.SubElement(root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Total")
-total = rootRead.get('Total')
-mab_total.set('importe', total)
+
+mab_total.set('importe', total_str)
 
 
 
