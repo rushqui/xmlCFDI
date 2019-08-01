@@ -36,7 +36,7 @@ def get_num_proveedor():
     find_num_pedido = factura_pdf_str.find('CENTRO:') + 8
 
     #plus the characters size of the order number
-    final_num_pedido = find_num_pedido + 5
+    final_num_pedido = find_num_pedido + 4
 
     #get the substring for the order number
     return factura_pdf_str[find_num_pedido:final_num_pedido]
