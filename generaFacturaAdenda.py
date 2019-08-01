@@ -42,10 +42,13 @@ mab_moneda.set('tipoMoneda', rootRead.get('Moneda'))
 total_str = rootRead.get('Total')
 split_total = total_str.split('.')
 print(split_total[0])
-total_flt = int(split_total[0])
-total_text = list(filter(None, wahio(total_flt)))
+total_int = int(split_total[0])
+total_dec = split_total[1]
+total_text = list(filter(None, wahio(total_int)))
+total_text_str = ' '.join(total_text).upper() + ' ' +'PESOS' + ' ' + split_total[1] + '/100' + ' ' +'M.N.'
 
-mab_moneda.set('importeConLetra',' '.join(total_text))
+
+mab_moneda.set('importeConLetra',total_text_str)
 
 mab_proveedor = ET.SubElement(root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Proveedor")
 mab_proveedor.set('codigo', '')
