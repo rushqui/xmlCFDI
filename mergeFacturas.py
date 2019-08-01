@@ -3,6 +3,8 @@ from xml.etree import ElementTree as ET
 def _addenda_tag():
     ET.register_namespace('cfdi', "http://www.sat.gob.mx/cfd/3")
     ET.register_namespace('xsi', "http://www.w3.org/2001/XMLSchema-instance")
+    ET.register_namespace('tfd', "http://www.sat.gob.mx/TimbreFiscalDigital")
+    ET.register_namespace('mabe', "http://recepcionfe.mabempresa.com/cfd/addenda/v1")
     xml_factura_read = ET.parse('docs/Factura.xml')
     root_factura = xml_factura_read.getroot()
     ET.SubElement(root_factura,"{http://www.sat.gob.mx/cfd/3}Addenda")
@@ -19,8 +21,8 @@ def _merge_facturas():
 
     insertion_point = xml_factura_read.find("{http://www.sat.gob.mx/cfd/3}Addenda")
     print(insertion_point)
-    print(xml_addenda.getroot())
-    insertion_point.extend(xml_addenda.getroot())
+    print(xml_addenda)
+    insertion_point.append(xml_addenda.getroot())
 
     # # xml_element_tree.extend(root_addenda)
     print (insertion_point)
