@@ -2,6 +2,8 @@ from xml.etree import ElementTree as ET
 from adendaPdf import get_num_pedido
 from adendaPdf import get_num_proveedor
 from common import wahio
+from mergeFacturas import _addenda_tag
+from mergeFacturas import _merge_facturas
 import os
 
 dir_docs = 'docs_generados/'
@@ -119,6 +121,8 @@ mab_total.set('importe', total_str)
 xmlTree = ET.ElementTree(root)
 xmlTree.write('docs_generados/Addenda.xml')
 # ET.dump(root)
+_addenda_tag()
+_merge_facturas()
 
 
 

@@ -31,8 +31,7 @@ def _merge_facturas():
 
     xml_factura_read.write('docs_generados/FacturaConAddenda.xml',encoding="utf-8",xml_declaration=True)
 
-_addenda_tag()
-_merge_facturas()
+
 
 
 
