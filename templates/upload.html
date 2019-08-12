@@ -1,0 +1,28 @@
+<!doctype html>
+<title>Generar Addenda</title>
+<h2>Seleccione los archivos para cargar</h2>
+<p>
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+		<ul class=flashes>
+		{% for message in messages %}
+		  <li>{{ message }}</li>
+		{% endfor %}
+		</ul>
+	  {% endif %}
+	{% endwith %}
+</p>
+<form method="post" action="/" enctype="multipart/form-data">
+    <dl>
+		<p>
+			<input type="file" name="files[]" multiple="true" autocomplete="off" required>
+		</p>
+    </dl>
+    <p>
+		<input type="submit" value="Cargar">
+	</p>
+	<form action="generaFacturaAdenda.py"> 
+<input type="button" name="runmyscript" value=" Run Python code " onClick="
+<? exec('python generaFacturaAdenda.py'); ?>"> 
+</form>
+</form>
