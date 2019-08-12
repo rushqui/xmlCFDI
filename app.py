@@ -1,6 +1,6 @@
 from flask import Flask
 
-UPLOAD_FOLDER = 'D:/cfdi/mabe_addenda/xmlCFDI/docs'
+UPLOAD_FOLDER = 'docs/'
 
 app = Flask(__name__)
 app.secret_key = "secret key"

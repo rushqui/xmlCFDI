@@ -22,7 +22,6 @@
 		<input type="submit" value="Cargar">
 	</p>
 	<form action="generaFacturaAdenda.py"> 
-<input type="button" name="runmyscript" value=" Run Python code " onClick="
-<? exec('python generaFacturaAdenda.py'); ?>"> 
+<button type="button" onclick="window.location.href='{{ url_for('generate_factura_addenda') }}';">Generar Addenda</button>
 </form>
 </form>
