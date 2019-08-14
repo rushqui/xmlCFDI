@@ -2,9 +2,9 @@ import PyPDF2
 
 #save de pdf on a variable, second prameter is for reading
 #and open in binary mode
-def get_num_pedido():
+def get_num_pedido(pdf_orden_compra):
 
-    ordenCompraPdf = open('docs/Orden_de_Compra.pdf','rb')
+    ordenCompraPdf = open('docs/{}'.format(pdf_orden_compra),'rb')
     pdfReader = PyPDF2.PdfFileReader(ordenCompraPdf)
     #print(pdfReader.numPages)
 
@@ -22,9 +22,9 @@ def get_num_pedido():
     return factura_pdf_str[find_num_pedido:final_num_pedido]
 
 
-def get_num_proveedor():
+def get_num_proveedor(pdf_orden_compra):
     
-    ordenCompraPdf = open('docs/Orden_de_Compra.pdf','rb')
+    ordenCompraPdf = open('docs/{}'.format(pdf_orden_compra),'rb')
     pdfReader = PyPDF2.PdfFileReader(ordenCompraPdf)
     #print(pdfReader.numPages)
 
