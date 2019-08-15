@@ -2,7 +2,7 @@ import os
 #import magic
 import urllib.request
 from app import app
-from flask import Flask, flash, request, redirect, render_template
+from flask import Flask, flash, request, redirect, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 
 from xml.etree import ElementTree as ET
@@ -25,6 +25,22 @@ TASA = '0.16'
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def remove_files(folder):
+    for file in os.listdir(folder):
+        file_path =  os.path.join(folder, file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+        except Exception as e:
+            print(e)
+
+
+    
+
+@app.route('/download/<path:filename>', methods=['GET', 'POST'])
+def download_addenda(filename):
+    # uploads = os.path.join(root_path, app.config['GENERATED_FOLDER'])
+    return send_from_directory(directory=app.config['GENERATED_FOLDER'], filename=filename, as_attachment=True)
 
 @app.route('/')
 def upload_form():
@@ -33,6 +49,8 @@ def upload_form():
 
 @app.route('/', methods=['POST'])
 def upload_file():
+    remove_files('docs_generados/')
+    remove_files('docs/')
     files_list = []
     if request.method == 'POST':
         # check if the post request has the files part
@@ -49,7 +67,9 @@ def upload_file():
 
     generate_factura_addenda(files_list)
 
-    return redirect('/')
+    return redirect('/download/FacturaConAddenda.xml')
+
+
 
 
 @app.route('/ejecuta')
