@@ -33,3 +33,5 @@ if defined _OLD_VIRTUAL_PATH goto ENDIFVPATH2
 :ENDIFVPATH2
 
 set "PATH=%VIRTUAL_ENV%\Scripts;%PATH%"
+set "FLASK_APP=run.py"
+set "FLASK_ENV=development"

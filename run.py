@@ -1,16 +1,18 @@
 import os
 #import magic
 import urllib.request
-from app import app
-from flask import Flask, flash, request, redirect, render_template, send_from_directory
+from flask import Flask, flash, request, redirect, render_template, send_from_directory, url_for, abort
 from werkzeug.utils import secure_filename
-
+from flask_login import LoginManager, logout_user, current_user, login_user, login_required
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.urls import url_parse
 from xml.etree import ElementTree as ET
-from adendaPdf import get_num_pedido
-from adendaPdf import get_num_proveedor
+from forms import SignupForm, AddendaForm, LoginForm
+from adendaPdf import get_num_pedido, get_num_proveedor
+from mergeFacturas import _addenda_tag, _merge_facturas
 from common import wahio
-from mergeFacturas import _addenda_tag
-from mergeFacturas import _merge_facturas
+
+
 
 ALLOWED_EXTENSIONS = set(['pdf', 'xml'])
 DIRECCION_CALLE = 'PASEO DE LAS PALAMAS'
@@ -20,6 +22,96 @@ CODIGO_ARTICULO = '0'
 UNIDAD = 'UN'
 TIPO = 'IVA'
 TASA = '0.16'
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = '7110c8ae51a4b5af97be6534caef90e4bb9bdcb3380af008f90b23a5d1616bf319bc298105da20fe'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://monitor:password1@172.22.75.56:5432/monitordb'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+login_manager = LoginManager(app)
+login_manager.login_view = "login"
+db = SQLAlchemy(app)
+
+from models import User, Addenda, Proveedor
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+@app.route("/upload")
+@login_required
+def post_form():
+    form = AddendaForm()
+    if form.validate_on_submit():
+        nombre = form.nombre.data
+        
+        post = Addenda(user_id=current_user.id, nombre=nombre)
+        post.save()
+
+    return render_template("upload.html", form=form)
+
+@app.route("/signup/", methods=["GET", "POST"])
+def show_signup_form():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = SignupForm()
+    error = None
+    if form.validate_on_submit():
+        numero_proveedor = form.numero_proveedor.data
+        name = form.name.data
+        email = form.email.data
+        password = form.password.data
+        # Comprobamos que no hay ya un usuario con ese email o número de proveedor
+        user = User.get_by_email(email)
+        np = User.get_by_numero(numero_proveedor)
+        no_p = Proveedor.get_by_numero(numero_proveedor)
+        if not no_p:
+            error = f'El número de proveedor {numero_proveedor} no está dado de alta. Favor de contactar al Administrador'
+        elif np is not None:
+            error = f'El número de proveedor {numero_proveedor} ya está siendo utilizado por otro usuario'    
+        elif user is not None:
+            error = f'El email {email} ya está siendo utilizado por otro usuario'
+                        
+        else:
+            # Creamos el usuario y lo guardamos
+            user = User(name=name, email=email, numero_proveedor=numero_proveedor)
+            user.set_password(password)
+            user.save()
+            # Dejamos al usuario logueado
+            login_user(user, remember=True)
+            next_page = request.args.get('next', None)
+            if not next_page or url_parse(next_page).netloc != '':
+                next_page = url_for('post_form')
+            return redirect(next_page)
+    return render_template("signup_form.html", form=form, error=error)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get_by_id(int(user_id))
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('post_form'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.get_by_email(form.email.data)
+        if user is not None and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            next_page = request.args.get('next')
+            if not next_page or url_parse(next_page).netloc != '':
+                next_page = url_for('post_form')
+            return redirect(next_page)
+    return render_template('login_form.html', form=form)
+    
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
 
 
 def allowed_file(filename):
@@ -35,21 +127,18 @@ def remove_files(folder):
             print(e)
 
 
+
     
 
 @app.route('/download/<path:filename>', methods=['GET', 'POST'])
 def download_addenda(filename):
-    # uploads = os.path.join(root_path, app.config['GENERATED_FOLDER'])
-    return send_from_directory(directory=app.config['GENERATED_FOLDER'], filename=filename, as_attachment=True)
-
-@app.route('/')
-def upload_form():
-    return render_template('upload.html')
+    return send_from_directory(directory='docs_generados/', filename=filename, as_attachment=True)
 
 
-@app.route('/', methods=['POST'])
+@app.route('/carga', methods=['POST'])
 def upload_file():
-    remove_files('docs_generados/')
+    if os.path.isdir('docs_generados/'):
+        remove_files('docs_generados/')
     remove_files('docs/')
     files_list = []
     if request.method == 'POST':
@@ -61,7 +150,7 @@ def upload_file():
         for file in files:
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                file.save(os.path.join('docs/', filename))
                 files_list.append(filename)
         flash('Archivos cargados exitosamente')
 
@@ -69,7 +158,7 @@ def upload_file():
 
     return redirect('/download/FacturaConAddenda.xml')
 
-
+                
 
 
 @app.route('/ejecuta')
@@ -212,8 +301,6 @@ def generate_factura_addenda(files_list):
     _merge_facturas()
     
 
-    return redirect('/')
+    return redirect('/upload')
 
 
-if __name__ == "__main__":
-    app.run()
