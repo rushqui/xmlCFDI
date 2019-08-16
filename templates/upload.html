@@ -1,5 +1,7 @@
-<!doctype html>
-<title>Generar Addenda</title>
+{% extends "base_template.html" %}
+
+{% block title %}Generar Addenda{% endblock %}
+{% block content %}
 <h2>Seleccione los archivos para cargar</h2>
 <p>
 	{% with messages = get_flashed_messages() %}
@@ -12,14 +14,15 @@
 	  {% endif %}
 	{% endwith %}
 </p>
-<form method="post" action="/" enctype="multipart/form-data">
+<form method="post" action="/carga" enctype="multipart/form-data">
     <dl>
 		<p>
 			<input type="file" name="files[]" multiple="true" autocomplete="off" required>
 		</p>
     </dl>
     <p>
-		<input type="submit" value="Cargar">
+		<input type="submit" value="Generar">
 	</p>
 <!-- <button type="button" onclick="window.location.href='{{ url_for('generate_factura_addenda') }}';">Generar Addenda</button> -->
 </form>
+{% endblock %}
