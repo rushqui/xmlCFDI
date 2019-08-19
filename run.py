@@ -223,7 +223,7 @@ def generate_factura_addenda(files_list):
 
     mab_proveedor = ET.SubElement(
         root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Proveedor")
-    mab_proveedor.set('codigo', '')
+    mab_proveedor.set('codigo',  current_user.numero_proveedor)
 
     mab_entrega = ET.SubElement(
         root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Entrega")
