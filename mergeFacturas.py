@@ -11,10 +11,12 @@ def _addenda_tag(xml_factura):
     xml_factura_read.write('docs_generados/Factura.xml')
 
 
-def _merge_facturas():
+def _merge_facturas(folio):
 
     xml_factura_read = ET.parse("docs_generados/Factura.xml")
     xml_addenda = ET.parse("docs_generados/Addenda.xml")
+
+    xmlfile_name = f'FacturaConAddenda{folio}.xml'
     # xml_element_tree = None 
 
     # xml_element_tree = root_factura
@@ -29,7 +31,10 @@ def _merge_facturas():
    
     # print(ET.tostring(xml_factura_read.getroot()))
 
-    xml_factura_read.write('docs_generados/FacturaConAddenda.xml',encoding="utf-8",xml_declaration=True)
+    xml_factura_read.write(f'docs_generados/{xmlfile_name}',encoding="utf-8",xml_declaration=True)
+
+    #regresa el nombre del archivo con el folio concatenado
+    return xmlfile_name
 
 
 

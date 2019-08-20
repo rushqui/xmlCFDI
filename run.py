@@ -154,15 +154,16 @@ def upload_file():
                 files_list.append(filename)
         flash('Archivos cargados exitosamente')
 
-    generate_factura_addenda(files_list)
+    xml_filename = generate_factura_addenda(files_list, current_user.numero_proveedor)
 
-    return redirect('/download/FacturaConAddenda.xml')
+    return redirect(f'/download/{xml_filename}')
 
                 
 
 
 @app.route('/ejecuta')
-def generate_factura_addenda(files_list):
+def generate_factura_addenda(files_list, num_proveedor):
+
     xml_factura = ''
     pdf_orden_compra = ''
 
@@ -223,7 +224,7 @@ def generate_factura_addenda(files_list):
 
     mab_proveedor = ET.SubElement(
         root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Proveedor")
-    mab_proveedor.set('codigo',  current_user.numero_proveedor)
+    mab_proveedor.set('codigo',  num_proveedor)
 
     mab_entrega = ET.SubElement(
         root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Entrega")
@@ -298,9 +299,8 @@ def generate_factura_addenda(files_list):
     xmlTree.write('docs_generados/Addenda.xml')
     # ET.dump(root)
     _addenda_tag(xml_factura)
-    _merge_facturas()
+    xml_filename = _merge_facturas(rootRead.get('Folio'))
     
-
-    return redirect('/upload')
+    return xml_filename
 
 
