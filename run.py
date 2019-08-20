@@ -137,21 +137,27 @@ def download_addenda(filename):
 
 @app.route('/carga', methods=['POST'])
 def upload_file():
+
     if os.path.isdir('docs_generados/'):
         remove_files('docs_generados/')
+
     remove_files('docs/')
     files_list = []
+
     if request.method == 'POST':
         # check if the post request has the files part
         if 'files[]' not in request.files:
             flash('No file part')
             return redirect(request.url)
+
         files = request.files.getlist('files[]')
+
         for file in files:
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join('docs/', filename))
                 files_list.append(filename)
+                
         flash('Archivos cargados exitosamente')
 
     xml_filename = generate_factura_addenda(files_list, current_user.numero_proveedor)
