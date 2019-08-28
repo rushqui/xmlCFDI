@@ -1,13 +1,12 @@
 import PyPDF2
 
-#save de pdf on a variable, second prameter is for reading
-#and open in binary mode
 def get_num_pedido(pdf_orden_compra):
 
+    #save de pdf on a variable, second parameter is for reading
+    #and open in binary mode
     ordenCompraPdf = open('docs/{}'.format(pdf_orden_compra),'rb')
     pdfReader = PyPDF2.PdfFileReader(ordenCompraPdf)
-    #print(pdfReader.numPages)
-
+    
     pageObj = pdfReader.getPage(0)
     factura_pdf_str = pageObj.extractText()
 

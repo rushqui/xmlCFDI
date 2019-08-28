@@ -43,11 +43,14 @@ def generate_factura_addenda():
     mab_moneda = ET.SubElement(root,"{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Moneda")
     mab_moneda.set('tipoMoneda', rootRead.get('Moneda'))
     total_str = rootRead.get('Total')
+    #Se separan los pesos de los centavos
     split_total = total_str.split('.')
     print(split_total[0])
     total_int = int(split_total[0])
     total_dec = split_total[1]
+    #Se obtiene el importe con letra
     total_text = list(filter(None, wahio(total_int)))
+    #Se le da el formato solicitado ejemplo: MIL PESOS 50/100 M.N
     total_text_str = ' '.join(total_text).upper() + ' ' +'PESOS' + ' ' + split_total[1] + '/100' + ' ' +'M.N.'
 
 

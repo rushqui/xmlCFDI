@@ -11,8 +11,9 @@ from forms import SignupForm, AddendaForm, LoginForm
 from adendaPdf import get_num_pedido, get_num_proveedor
 from mergeFacturas import _addenda_tag, _merge_facturas
 from common import wahio
+from app import create_app
 
-
+app = create_app()
 
 ALLOWED_EXTENSIONS = set(['pdf', 'xml'])
 DIRECCION_CALLE = 'PASEO DE LAS PALAMAS'
@@ -23,17 +24,24 @@ UNIDAD = 'UN'
 TIPO = 'IVA'
 TASA = '0.16'
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = '7110c8ae51a4b5af97be6534caef90e4bb9bdcb3380af008f90b23a5d1616bf319bc298105da20fe'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://monitor:password1@172.22.75.56:5432/monitordb'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
 db = SQLAlchemy(app)
 
 from models import User, Addenda, Proveedor
 
+@app.errorhandler(404)
+def not_found(error):
+    return render_template("404.html", error = error)
+
+@app.errorhandler(500)
+def server_error(error):
+    return render_template("500.html", error = error)
+
+@app.route('/error')
+def generate_server_error():
+    return 1/0
+    
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -125,9 +133,6 @@ def remove_files(folder):
                 os.unlink(file_path)
         except Exception as e:
             print(e)
-
-
-
     
 
 @app.route('/download/<path:filename>', methods=['GET', 'POST'])
@@ -137,32 +142,39 @@ def download_addenda(filename):
 
 @app.route('/carga', methods=['POST'])
 def upload_file():
+
     if os.path.isdir('docs_generados/'):
         remove_files('docs_generados/')
+
     remove_files('docs/')
     files_list = []
+
     if request.method == 'POST':
         # check if the post request has the files part
         if 'files[]' not in request.files:
             flash('No file part')
             return redirect(request.url)
+
         files = request.files.getlist('files[]')
+
         for file in files:
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join('docs/', filename))
                 files_list.append(filename)
+                
         flash('Archivos cargados exitosamente')
 
-    generate_factura_addenda(files_list)
+    xml_filename = generate_factura_addenda(files_list, current_user.numero_proveedor)
 
-    return redirect('/download/FacturaConAddenda.xml')
+    return redirect(f'/download/{xml_filename}')
 
                 
 
 
 @app.route('/ejecuta')
-def generate_factura_addenda(files_list):
+def generate_factura_addenda(files_list, num_proveedor):
+
     xml_factura = ''
     pdf_orden_compra = ''
 
@@ -223,7 +235,7 @@ def generate_factura_addenda(files_list):
 
     mab_proveedor = ET.SubElement(
         root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Proveedor")
-    mab_proveedor.set('codigo', '')
+    mab_proveedor.set('codigo',  num_proveedor)
 
     mab_entrega = ET.SubElement(
         root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Entrega")
@@ -298,9 +310,8 @@ def generate_factura_addenda(files_list):
     xmlTree.write('docs_generados/Addenda.xml')
     # ET.dump(root)
     _addenda_tag(xml_factura)
-    _merge_facturas()
+    xml_filename = _merge_facturas(rootRead.get('Folio'))
     
-
-    return redirect('/upload')
+    return xml_filename
 
 

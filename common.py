@@ -1,4 +1,4 @@
-
+#Funcion para convertir numeros a letra 
 def wahio(n):
     lista = list(str(n))
     inverse, new, con, = lista[::-1], ['', '', '', '', '', '', '', '', ''], 0
