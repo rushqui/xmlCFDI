@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html  lang="es-MX">
+<head>
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<!-- Stylesheets
+    ============================================= -->
+	<link href="http://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/bootstrap.css" type="text/css" /> 
+    <link rel="stylesheet" href="style.css" type="text/css" /> 
+    <link rel="stylesheet" href="css/dark.css" type="text/css" /> 
+    <link rel="stylesheet" href="css/font-icons.css" type="text/css" /> 
+    <link rel="stylesheet" href="css/animate.css" type="text/css" />
+    <link rel="stylesheet" href="css/magnific-popup.css" type="text/css" />
+
+    <link rel="stylesheet" href="css/responsive.css" type="text/css" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--[if lt IE 9]>
+    	<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+    <![endif]-->
+
+    <!-- External JavaScripts
+    ============================================= -->
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/plugins.js"></script>
+
+    <!-- Document Title
+    ============================================= -->
+	<title>Iniciar Sesión</title>
+
+</head>
+
+<body class="stretched">
+
+    <!-- Document Wrapper
+    ============================================= -->
+    <div id="wrapper" class="clearfix">
+
+        <!-- Header
+        ============================================= -->
+        <header id="header" class="full-header">
+
+            <div id="header-wrap">
+
+                <div class="container clearfix">
+
+                    <div id="primary-menu-trigger"><i class="icon-reorder"></i></div>
+
+                    <!-- Logo
+                    ============================================= -->
+                    <div id="logo">
+                        <a href="index.html" class="standard-logo" data-dark-logo="images/logos.png"><img src="images/logos1.png" alt="Canvas Logo"></a>
+                        </a>
+                    </div><!-- #logo end -->
+
+                    <!-- Primary Navigation
+                    ============================================= -->
+                    <nav id="primary-menu">
+
+                      <ul>
+							<li  ><a href="index.html"><div>Inicio</div></a></li> 
+							<li ><a href="logIn.html"><div>Iniciar Sesión</div></a></li>
+							<li class="current"><a href="contacto.html"><div>Registrar</div></a></li>
+							 
+						</ul>
+
+                    </nav><!-- #primary-menu end -->
+
+                </div>
+
+            </div>
+
+        </header><!-- #header end -->
+
+        <!-- Page Title
+        ============================================= -->
+       
+
+        <!-- Contact Form & Map Overlay Section
+        ============================================= -->
+        <section id="map-overlay">
+
+            <div class="container clearfix">
+
+                <!-- Contact Form Overlay
+                ============================================= -->
+                <div id="contact-form-overlay-mini" class="clearfix">
+
+                    <div class="fancy-title">
+                        <h3>Iniciar sesión</h3>
+                    </div>
+
+                    <div id="contact-form-result" data-notify-type="success" data-notify-msg="<i class=icon-ok-sign></i> ¡Su mensaje se ha enviado correctamente!"></div>
+
+                    <!-- Contact Form
+                    ============================================= -->
+                    <form class="nobottommargin" id="template-contactform" name="template-contactform" action="include/sendemail.php" method="post">
+                        <div class="col_full">
+                            <label for="template-contactform-email">Email <small>*</small></label>
+                            <input type="email" id="template-contactform-email" name="template-contactform-email" value="" class="required email sm-form-control" />
+                        </div>
+
+                        <div class="col_full">
+                            <label for="template-contactform-phone">Contraseña <small>*</small></label>
+                            <input type="text" id="template-contactform-phone" name="template-contactform-phone" value="" class="sm-form-control" />
+                        </div>
+ 
+
+                        <div class="col_full hidden">
+                            <input type="text" id="template-contactform-botcheck" name="template-contactform-botcheck" value="" class="sm-form-control" />
+                        </div>
+
+                        <div class="col_full">
+                            <button class="button button-3d nomargin" type="submit" id="template-contactform-submit" name="template-contactform-submit" value="submit">Entrar</button>
+                        </div>
+
+                    </form>
+
+                    <script type="text/javascript">
+                        $("#template-contactform").validate({
+                            submitHandler: function(form) {
+                                $('.form-process').fadeIn();
+                                $(form).ajaxSubmit({
+                                    target: '#contact-form-result',
+                                    success: function() {
+                                        $('.form-process').fadeOut();
+                                        $('#template-contactform').find('.sm-form-control').val('');
+                                        $('#contact-form-result').attr('data-notify-msg', $('#contact-form-result').html()).html('');
+                                        SEMICOLON.widget.notifications($('#contact-form-result'));
+                                    }
+                                });
+                            }
+                        });
+                    </script>
+
+                </div><!-- Contact Form Overlay End -->
+
+            </div>
+                        <section id="google-map" class="gmap">
+                            <img src="images/videos/portada.jpg"  alt=""  data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="10" class="rev-slidebg" data-no-retina>
+                        </section>
+
+           
+        </section><!-- Contact Form & Map Overlay Section End -->
+
+       <footer id="footer" class="dark">
+
+		 
+			<!-- Copyrights
+			============================================= -->
+			<div id="copyrights">
+
+				<div class="container clearfix" style="padding:0">
+
+					<div class="col_half">
+						Copyright &copy; 2019 Todos los Derechos reservados por X SA de CV<br>
+						 <a href="#">Aviso de Privacidad</a>
+					</div>
+
+					<div class="col_half col_last tright">
+				 
+						<div class="clear"></div><i class="icon-home"></i>
+AV  (de la empresa), Colonia... , Municipio ..., C.P. ... Ciudad de México <span class="middot">&middot;</span>
+                        <i class="icon-envelope2"></i> <a href="xxx@hotmail.net.mx">xxx@hotmail.com.mx </a> <span class="middot">&middot;</span> <i class="icon-phone"></i>(55) XX XX XX XX  
+                    </div>
+
+				</div>
+
+			</div><!-- #copyrights end -->
+
+		</footer><!-- #footer end -->
+
+    </div><!-- #wrapper end -->
+
+    <!-- Go To Top
+    ============================================= -->
+    <div id="gotoTop" class="icon-angle-up"></div>
+
+    <!-- Footer Scripts
+    ============================================= -->
+    <script type="text/javascript" src="js/functions.js"></script>
+
+</body>
+</html>

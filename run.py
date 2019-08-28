@@ -133,9 +133,6 @@ def remove_files(folder):
                 os.unlink(file_path)
         except Exception as e:
             print(e)
-
-
-
     
 
 @app.route('/download/<path:filename>', methods=['GET', 'POST'])
