@@ -4,12 +4,14 @@
 {{ super() }}
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+
 {% endblock %}
 
 {% block body %}
 
-    {% block navbar%}
+    {% block navbar %}
         {% include 'navbar.html' %}
     {% endblock %}
 
@@ -20,4 +22,5 @@
     {{ super() }}
     {% endblock %}
 
+  
 {% endblock %}
