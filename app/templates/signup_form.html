@@ -3,48 +3,57 @@
 {% block title %}Registro de usuarios{% endblock %}
 
 {% block content %}
-    <div class="container">
+    <div class="container" id="singup-form">
         <div class="card">
             <div class="card-body">
+
                 {% if error %}
                     <p style="color: red;"><strong>Error:</strong> {{error}}
                 {% endif %}
+
+                <div class="title-form">
+                    <h2>Registre una cuenta</h2>
+                </div>
+
                 <form action="" method="post" novalidate>
                     {{ form.hidden_tag() }}
+                    
                     <div class="form-group">
-                        {{ form.numero_proveedor.label }}
-                        {{ form.numero_proveedor(size=64, class_='form-control') }}<br>
+                        {{ form.numero_proveedor(class_='form-control', placeholder='número de proveedor') }}
                         {% for error in form.numero_proveedor.errors %}
-                        <span style="color: red;">{{'Campo requerido'}}</span>
+                        <small class="error-message">{{'Campo requerido'}}</small>
                         {% endfor %}
                     </div>
+
                     <div class="form-group">
-                        {{ form.name.label }}
-                        {{ form.name(size=64, class_='form-control') }}<br>
+                        {{ form.name(class_='form-control', placeholder='nombre') }}
                         {% for error in form.name.errors %}
-                        <span style="color: red;">{{ 'Campo requerido' }}</span>
+                        <small class="error-message">{{ 'Campo requerido' }}</small>
                         {% endfor %}
                     </div>
+
                     <div class="form-group">
-                        {{ form.email.label }}
-                        {{ form.email(class_='form-control') }}<br>
+                        {{ form.email(class_='form-control', placeholder='email') }}
                         {% for error in form.email.errors %}
-                        <span style="color: red;">{{ 'Campo requerido' }}</span>
+                        <small class="error-message">{{ 'Campo requerido' }}</small>
                         {% endfor %}
                     </div>
+
                     <div class="form-group">
-                        {{ form.password.label }}
-                        {{ form.password(class_='form-control') }}<br>
+                        {{ form.password(class_='form-control', placeholder='password') }}
                         {% for error in form.password.errors %}
-                        <span style="color: red;">{{ 'Campo requerido' }}</span>
+                        <small class="error-message">{{ 'Campo requerido' }}</small>
                         {% endfor %}
                     </div>
+
                     <div>
                         {{ form.submit(class_="btn btn-primary login-button") }}
                     </div>
+
                 </form>
-            </div>
-        </div>
-    </div>
+
+            </div> <!-- .card-body -->
+        </div> <!-- .card -->
+    </div> <!-- .container -->
     
 {% endblock %}
