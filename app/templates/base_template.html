@@ -13,7 +13,7 @@
   
     {% block navbar%}
         {% include 'navbar.html' %}
-        <div id="usuario-mabe"><span class="label label-primary">{{ current_user.name }}</span></div>
+        <div id="usuario-mabe"><span class="badge badge-pill badge-info">{{ current_user.name }}</span></div>
     {% endblock %}
 
     {% block content %}
