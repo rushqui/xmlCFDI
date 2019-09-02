@@ -7,18 +7,21 @@
     <div class="container" id="login-form">
         <div class="card">
             <div class="card-body">
+                <div>
+                    <h2>Iniciar Sesión</h2>
+                </div>
                 <form action="" method="post" novalidate>
                         {{ form.hidden_tag() }}
                         <div class="form-group">
-                            {{ form.email.label }}
-                            {{ form.email(class_='form-control') }}
+                            <!-- {{ form.email.label }} -->
+                            {{ form.email(class_='form-control', placeholder='email') }}
                             {% for error in form.email.errors %}
                                 <small class="form-text text-muted error-message">{{ error }}</small>
                             {% endfor %}
                         </div>
                         <div class="form-group">
-                            {{ form.password.label }}
-                            {{ form.password(class_='form-control') }}
+                            <!-- {{ form.password.label }} -->
+                            {{ form.password(class_='form-control', placeholder='password') }}
                             {% for error in form.password.errors %}
                                 <small class="form-text text-muted error-message">{{ error }}</small>
                             {% endfor %}
