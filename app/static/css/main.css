@@ -1,0 +1,18 @@
+
+.error-message{
+    color: red;
+}   
+
+#login-form{
+    margin-top: 100px;
+}
+
+@media (min-width: 992px){ 
+    #login-form{
+        width: 30%
+    }
+ }
+
+.login-button{
+    width: 100%
+}
