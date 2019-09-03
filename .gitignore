@@ -1,9 +1,8 @@
 .DS_Store
 .vscode
-docs_generados/*
 docs/*
 *.pyc
 addenda-env/*
 mabe/*
 addenda-env2/*
-    
+app/docs_generados/*    
