@@ -1,5 +1,4 @@
 
-
 #logo-mabe{
 max-width: 60px;
 }
@@ -18,7 +17,11 @@ max-width: 60px;
 }   
 
 #login-form{
-    margin-top: 100px;
+    margin-top: 5%;
+}
+
+#singup-form{
+    margin-top: 5%;
 }
 
 .card{
@@ -29,11 +32,16 @@ max-width: 60px;
     #login-form{
         width: 30%
     }
+
+    #singup-form{
+        width: 30%
+    }
  }
 
 .login-button{
     width: 100%
 }
+
 
 #upload-form{
     margin-top: 100px;
@@ -76,3 +84,10 @@ padding: 10px;
 background: rgba(0,0,0,0.5);
 display: inline-block;
 }
+
+.title-form{
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+
