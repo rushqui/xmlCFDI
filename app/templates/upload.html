@@ -2,27 +2,47 @@
 
 {% block title %}Generar Addenda{% endblock %}
 {% block content %}
-<h2>Seleccione los archivos para cargar</h2>
-<p>
-	{% with messages = get_flashed_messages() %}
-	  {% if messages %}
-		<ul class=flashes>
-		{% for message in messages %}
-		  <li>{{ message }}</li>
-		{% endfor %}
-		</ul>
-	  {% endif %}
-	{% endwith %}
-</p>
-<form method="post" action="/carga" enctype="multipart/form-data">
-    <dl>
-		<p>
-			<input type="file" name="files[]" multiple="true" autocomplete="off" required>
-		</p>
-    </dl>
-    <p>
-		<input type="submit" value="Generar">
-	</p>
-<!-- <button type="button" onclick="window.location.href='{{ url_for('generate_factura_addenda') }}';">Generar Addenda</button> -->
-</form>
+
+<div class="portada">
+		<div id="imgupload">
+	    </div>
+		
+		<div class="text">
+			<div class="card">
+	            <div class="card-body">
+	                
+	                    <div class="form-group">Seleccione los archivos para cargar</div>
+	                    <div class="form-group">
+	                    <p>
+							{% with messages = get_flashed_messages() %}
+							  {% if messages %}
+								<ul class=flashes>
+								{% for message in messages %}
+								  <li>{{ message }}</li>
+								{% endfor %}
+								</ul>
+							  {% endif %}
+							{% endwith %}
+						</p>
+	                	</div>
+	                <form method="post" action="/carga" enctype="multipart/form-data">
+	                	<div class="form-group">
+						    <dl>
+								<p>
+									<input type="file" class="form-control-file" name="files[]" multiple="true" autocomplete="off" required>
+								</p>
+						    </dl>
+						    <p>
+								<button type="submit" class="btn btn-primary" value="Generar">Generar</button>
+							</p>
+						</div>
+					</form>	
+				</div>
+			</div>
+
+		</div>
+</div>
+
 {% endblock %}
+
+
