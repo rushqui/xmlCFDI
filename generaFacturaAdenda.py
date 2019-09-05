@@ -7,7 +7,7 @@ from mergeFacturas import _merge_facturas
 import os
 
 def generate_factura_addenda():
-    dir_docs = 'docs_generados/'
+    dir_docs = 'app/static/docs_generados/'
     try:
         os.mkdir(dir_docs)
     except:
@@ -17,7 +17,7 @@ def generate_factura_addenda():
 
     # namespcs =  {'factura_ns': 'http://www.sat.gob.mx/cfd/3',
     #             'mabe_ns': 'http://www.mabe.com.mx'}
-    xmlTreeRead = ET.parse('docs/Factura.xml')
+    xmlTreeRead = ET.parse('app/static/docs/Factura.xml')
 
     rootRead = xmlTreeRead.getroot()
     print(rootRead.get('Moneda'))
@@ -123,7 +123,7 @@ def generate_factura_addenda():
 
     # root.insert(1,body)
     xmlTree = ET.ElementTree(root)
-    xmlTree.write('docs_generados/Addenda.xml')
+    xmlTree.write('app/static/docs_generados/Addenda.xml')
     # ET.dump(root)
     _addenda_tag()
     _merge_facturas()

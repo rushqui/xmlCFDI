@@ -137,16 +137,16 @@ def remove_files(folder):
 
 @app.route('/download/<path:filename>', methods=['GET', 'POST'])
 def download_addenda(filename):
-    return send_from_directory(directory='docs_generados/', filename=filename, as_attachment=True)
+    return send_from_directory(directory='app/static/docs_generados/', filename=filename, as_attachment=True)
 
 
 @app.route('/carga', methods=['POST'])
 def upload_file():
 
-    if os.path.isdir('docs_generados/'):
-        remove_files('docs_generados/')
+    if os.path.isdir('app/static/docs_generados/'):
+        remove_files('app/static/docs_generados/')
 
-    remove_files('docs/')
+    remove_files('app/static/docs/')
     files_list = []
 
     if request.method == 'POST':
@@ -160,7 +160,7 @@ def upload_file():
         for file in files:
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                file.save(os.path.join('docs/', filename))
+                file.save(os.path.join('app/static/docs/', filename))
                 files_list.append(filename)
                 
         flash('Archivos cargados exitosamente')
@@ -178,7 +178,7 @@ def generate_factura_addenda(files_list, num_proveedor):
     xml_factura = ''
     pdf_orden_compra = ''
 
-    dir_docs = 'docs_generados/'
+    dir_docs = 'app/static/docs_generados/'
     try:
         os.mkdir(dir_docs)
     except:
@@ -196,7 +196,7 @@ def generate_factura_addenda(files_list, num_proveedor):
         else:
             pdf_orden_compra = file
 
-    xmlTreeRead = ET.parse('docs/{}'.format(xml_factura))
+    xmlTreeRead = ET.parse('app/static/docs/{}'.format(xml_factura))
 
     rootRead = xmlTreeRead.getroot()
     print(rootRead.get('Moneda'))
@@ -307,7 +307,7 @@ def generate_factura_addenda(files_list, num_proveedor):
 
     # root.insert(1,body)
     xmlTree = ET.ElementTree(root)
-    xmlTree.write('docs_generados/Addenda.xml')
+    xmlTree.write('app/static/docs_generados/Addenda.xml')
     # ET.dump(root)
     _addenda_tag(xml_factura)
     xml_filename = _merge_facturas(rootRead.get('Folio'))
