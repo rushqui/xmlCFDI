@@ -48,26 +48,14 @@ def upload_file(file_stream, filename, content_type):
     return url
 
 
-# def create_file(filename, file_content):
-#     """Create a file.
-#     The retry_params specified in the open call will override the default
-#     retry params for this particular file handle.
-#     Args:
-#       filename: filename.
-#     """
-#     filename = _safe_filename(filename)
-#     bucket = '/' + current_app.config['CLOUD_STORAGE_BUCKET']
-#     filename_gcs = bucket + '/' + filename
-
-#     write_retry_params = gcs.RetryParams(backoff_factor=1.1)
-#     gcs_file = gcs.open(filename_gcs,
-#                         f'w',
-#                         content_type='text/xml',
-#                         # options={'x-goog-meta-foo': 'foo',
-#                         #          'x-goog-meta-bar': 'bar'},
-#                         retry_params=write_retry_params)
-#     gcs_file.write(file_content)
-#     # gcs_file.write('f'*1024*4 + '\n')
-#     gcs_file.close()
+def download_file(source_blobname, destination_file_name):
+    """Downloads a blob from the bucket."""
     
-#     return filename
+    client = _get_storage_client()
+    bucket = client.bucket(current_app.config['CLOUD_STORAGE_BUCKET'])
+    blob = bucket.blob(source_blobname)
+
+    blob.download_to_filename(destination_file_name)
+    print('Blob {} downloaded to {}.'.format(
+        source_blobname,
+        destination_file_name))

@@ -2,7 +2,7 @@ import os
 #import magic
 import urllib.request
 import storage
-from flask import Flask, flash, request, redirect, render_template, send_from_directory, url_for, abort, current_app
+from flask import Flask, flash, request, redirect, render_template, send_from_directory, url_for, abort, current_app, send_file
 from werkzeug.utils import secure_filename
 from flask_login import LoginManager, logout_user, current_user, login_user, login_required
 from flask_sqlalchemy import SQLAlchemy
@@ -176,9 +176,12 @@ def upload_file():
         flash('Archivos cargados exitosamente')
 
     xml_filename = generate_factura_addenda(files_list, current_user.numero_proveedor)
+    url_xml_list = xml_filename.split('/')
 
+    # storage.download_file(url_xml_list[4], url_xml_list[4])
     # return redirect(f'/download/{xml_filename}')
-    return redirect(url_for('index'))
+    return redirect(xml_filename)
+    # return send_file(xml_filename, as_attachment=True)
 
 # Upload the user-uploaded file to Google Cloud Storage
 def upload_file_gs(file):
