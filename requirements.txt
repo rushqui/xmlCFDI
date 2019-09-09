@@ -13,4 +13,6 @@ text-unidecode==1.2
 Werkzeug==0.14.1
 WTForms==2.2.1
 PyPDF2
-pg8000  
+pg8000
+google-cloud-storage  
+six

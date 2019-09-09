@@ -1,17 +1,21 @@
 import os
 #import magic
 import urllib.request
-from flask import Flask, flash, request, redirect, render_template, send_from_directory, url_for, abort
+import storage
+from flask import Flask, flash, request, redirect, render_template, send_from_directory, url_for, abort, current_app
 from werkzeug.utils import secure_filename
 from flask_login import LoginManager, logout_user, current_user, login_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.urls import url_parse
+from werkzeug.exceptions import BadRequest
 from xml.etree import ElementTree as ET
 from forms import SignupForm, AddendaForm, LoginForm
 from adendaPdf import get_num_pedido, get_num_proveedor
 from mergeFacturas import _addenda_tag, _merge_facturas
 from common import wahio
 from app import create_app
+from urllib.request import urlopen
+
 
 app = create_app()
 
@@ -123,7 +127,11 @@ def logout():
 
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    if ('.' not in filename or 
+            filename.rsplit('.', 1)[1].lower() not in ALLOWED_EXTENSIONS):
+        raise BadRequest(
+            "{0} has an invalid name or extension".format(filename))
+
 
 def remove_files(folder):
     for file in os.listdir(folder):
@@ -135,18 +143,18 @@ def remove_files(folder):
             print(e)
     
 
-@app.route('/download/<path:filename>', methods=['GET', 'POST'])
-def download_addenda(filename):
-    return send_from_directory(directory='app/static/docs_generados/', filename=filename, as_attachment=True)
+# @app.route('/download/<path:filename>', methods=['GET', 'POST'])
+# def download_addenda(filename):
+#     return send_from_directory(directory='app/static/docs_generados/', filename=filename, as_attachment=True)
 
 
 @app.route('/carga', methods=['POST'])
 def upload_file():
 
-    if os.path.isdir('app/static/docs_generados/'):
-        remove_files('app/static/docs_generados/')
+    # if os.path.isdir('app/static/docs_generados/'):
+    #     remove_files('app/static/docs_generados/')
 
-    remove_files('app/static/docs/')
+    # remove_files('app/static/docs/')
     files_list = []
 
     if request.method == 'POST':
@@ -158,18 +166,33 @@ def upload_file():
         files = request.files.getlist('files[]')
 
         for file in files:
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(os.path.join('app/static/docs/', filename))
-                files_list.append(filename)
+            if file : 
+                allowed_file(file.filename)
+                # filename = secure_filename(file.filename)
+                # file.save(os.path.join('app/static/docs/', filename))
+                file_url = upload_file_gs(file)
+                files_list.append(file_url)
                 
         flash('Archivos cargados exitosamente')
 
     xml_filename = generate_factura_addenda(files_list, current_user.numero_proveedor)
 
-    return redirect(f'/download/{xml_filename}')
+    # return redirect(f'/download/{xml_filename}')
+    return redirect(url_for('index'))
 
-                
+# Upload the user-uploaded file to Google Cloud Storage
+def upload_file_gs(file):
+
+    public_url = storage.upload_file(
+        file.read(),
+        file.filename,
+        file.content_type
+    )
+
+    current_app.logger.info(
+        "Uploaded file %s as %s.", file.filename, public_url)
+
+    return public_url
 
 
 @app.route('/ejecuta')
@@ -178,11 +201,11 @@ def generate_factura_addenda(files_list, num_proveedor):
     xml_factura = ''
     pdf_orden_compra = ''
 
-    dir_docs = 'app/static/docs_generados/'
-    try:
-        os.mkdir(dir_docs)
-    except:
-        print("Ya existe la carpeta 'docs_generados'")
+    # dir_docs = 'app/static/docs_generados/'
+    # try:
+    #     os.mkdir(dir_docs)
+    # except:
+    #     print("Ya existe la carpeta 'docs_generados'")
 
     ET.register_namespace(
         'mabe', "http://recepcionfe.mabempresa.com/cfd/addenda/v1")
@@ -196,7 +219,9 @@ def generate_factura_addenda(files_list, num_proveedor):
         else:
             pdf_orden_compra = file
 
-    xmlTreeRead = ET.parse('app/static/docs/{}'.format(xml_factura))
+    open_urlfile = urlopen(xml_factura)
+    
+    xmlTreeRead = ET.parse(open_urlfile)
 
     rootRead = xmlTreeRead.getroot()
     print(rootRead.get('Moneda'))
@@ -307,11 +332,12 @@ def generate_factura_addenda(files_list, num_proveedor):
 
     # root.insert(1,body)
     xmlTree = ET.ElementTree(root)
-    xmlTree.write('app/static/docs_generados/Addenda.xml')
+    xmlTree_string = ET.tostring(xmlTree.getroot(), encoding='utf8', method='xml')
+    url_addenda_file = storage.upload_file(xmlTree_string, 'Addenda.xml', 'text/xml')
     # ET.dump(root)
-    _addenda_tag(xml_factura)
-    xml_filename = _merge_facturas(rootRead.get('Folio'))
-    
+    url_addendatag_file = _addenda_tag(xml_factura)
+    xml_filename = _merge_facturas(rootRead.get('Folio'), url_addenda_file, url_addendatag_file)
+    print(xml_filename)
     return xml_filename
 
 
