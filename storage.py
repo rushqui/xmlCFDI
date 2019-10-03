@@ -2,10 +2,12 @@ import datetime
 import six
 
 import os
+import io
 
-from flask import current_app
+from flask import current_app, send_file
 from google.cloud import storage
 from werkzeug import secure_filename
+
 
 
 def _get_storage_client():
@@ -59,3 +61,12 @@ def download_file(source_blobname, destination_file_name):
     print('Blob {} downloaded to {}.'.format(
         source_blobname,
         destination_file_name))
+
+def download_file_from_bucket(url_file):
+
+    url_file_list = url_file.split('/')
+    client = _get_storage_client()
+    bucket = client.bucket(current_app.config['CLOUD_STORAGE_BUCKET'])
+    blob = bucket.get_blob(url_file_list[4])
+
+    return send_file(io.BytesIO(blob.download_as_string()), attachment_filename = url_file_list[4], as_attachment=True, mimetype='application/xml')

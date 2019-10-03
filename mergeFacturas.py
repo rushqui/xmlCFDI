@@ -16,7 +16,7 @@ def _addenda_tag(xml_factura):
     root_factura = xml_factura_read.getroot()
     ET.SubElement(root_factura,"{http://www.sat.gob.mx/cfd/3}Addenda")
     root_factura_string = ET.tostring(root_factura, encoding='utf8', method='xml')
-    url_addendatag_file = storage.upload_file(root_factura_string, 'FacturaTagAddenda.xml', 'text/xml')
+    url_addendatag_file = storage.upload_file(root_factura_string, 'FacturaTagAddenda.xml', 'application/xml')
     return url_addendatag_file
 
 
@@ -43,7 +43,7 @@ def _merge_facturas(folio, url_addenda_file, url_addendatag_file):
    
     xml_addenda_merged = ET.tostring(xml_factura_read.getroot(), encoding='utf8', method='xml')
 
-    url_xmlend_file = storage.upload_file(xml_addenda_merged, xmlfile_name, 'text/xml')
+    url_xmlend_file = storage.upload_file(xml_addenda_merged, xmlfile_name, 'application/xml')
 
     #regresa el nombre del archivo con el folio concatenado
     return url_xmlend_file

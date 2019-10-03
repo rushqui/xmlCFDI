@@ -1,6 +1,7 @@
 
 #logo-mabe{
-max-width: 60px;
+    max-width: 45px;
+    margin-left: 10px;
 }
 
 #usuario-mabe{
@@ -15,6 +16,10 @@ max-width: 60px;
 .error-message{
     color: red;
 }   
+
+.main-container{
+    min-height: 640px;
+}
 
 #login-form{
     margin-top: 5%;

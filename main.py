@@ -78,7 +78,7 @@ def show_signup_form():
         np = User.get_by_numero(numero_proveedor)
         no_p = Proveedor.get_by_numero(numero_proveedor)
         if not no_p:
-            error = f'El número de proveedor {numero_proveedor} no está dado de alta. Favor de contactar al Administrador'
+            error = f'El número de proveedor {numero_proveedor} no está dado de alta. Favor de contactar al Administrador Atención telefónica: 55-51-96-31-68 Correo electrónico: acallejas582@gmail.com'
         elif np is not None:
             error = f'El número de proveedor {numero_proveedor} ya está siendo utilizado por otro usuario'    
         elif user is not None:
@@ -180,8 +180,9 @@ def upload_file():
 
     # storage.download_file(url_xml_list[4], url_xml_list[4])
     # return redirect(f'/download/{xml_filename}')
-    return redirect(xml_filename)
-    # return send_file(xml_filename, as_attachment=True)
+    return storage.download_file_from_bucket(xml_filename)
+    # return redirect(xml_filename)
+    # return send_file(xml_filename, as_`attachment=True)
 
 # Upload the user-uploaded file to Google Cloud Storage
 def upload_file_gs(file):
@@ -336,7 +337,7 @@ def generate_factura_addenda(files_list, num_proveedor):
     # root.insert(1,body)
     xmlTree = ET.ElementTree(root)
     xmlTree_string = ET.tostring(xmlTree.getroot(), encoding='utf8', method='xml')
-    url_addenda_file = storage.upload_file(xmlTree_string, 'Addenda.xml', 'text/xml')
+    url_addenda_file = storage.upload_file(xmlTree_string, 'Addenda.xml', 'application/xml')
     # ET.dump(root)
     url_addendatag_file = _addenda_tag(xml_factura)
     xml_filename = _merge_facturas(rootRead.get('Folio'), url_addenda_file, url_addendatag_file)
