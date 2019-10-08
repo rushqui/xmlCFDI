@@ -272,7 +272,7 @@ def generate_factura_addenda(files_list, num_proveedor):
     mab_entrega.set('plantaEntrega', planta_entrega)
     mab_entrega.set('calle', DIRECCION_CALLE)
     mab_entrega.set('noExterior', DIRECCION_NO_EXTERIOR)
-    mab_entrega.set('codigoPostal', DIRECCION_NO_EXTERIOR)
+    mab_entrega.set('codigoPostal', DIRECCION_CP)
 
     mab_detalles = ET.SubElement(
         root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Detalles")
