@@ -211,8 +211,7 @@ def generate_factura_addenda(files_list, num_proveedor):
     # except:
     #     print("Ya existe la carpeta 'docs_generados'")
 
-    ET.register_namespace(
-        'mabe', "http://recepcionfe.mabempresa.com/cfd/addenda/v1")
+    ET.register_namespace('mabe', "http://recepcionfe.mabempresa.com/cfd/addenda/v1")
 
     # namespcs =  {'factura_ns': 'http://www.sat.gob.mx/cfd/3',
     #             'mabe_ns': 'http://www.mabe.com.mx'}
@@ -235,7 +234,7 @@ def generate_factura_addenda(files_list, num_proveedor):
 
     atrr_qname = ET.QName('http://www.w3.org/2001/XMLSchema-instance', 'schemaLocation')
     root = ET.Element('Factura', {
-                      atrr_qname: 'https://recepcionfe.mabempresa.com/cfd/addenda/v1 https://recepcionfe.mabempresa.com/cfd/addenda/v1/mabev1.xsd'})
+                      atrr_qname: 'http://recepcionfe.mabempresa.com/cfd/addenda/v1 http://recepcionfe.mabempresa.com/cfd/addenda/v1/mabev1.xsd'})
 
     #mab_factura = ET.SubElement(root,"{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Factura")
 

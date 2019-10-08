@@ -7,7 +7,7 @@ def _addenda_tag(xml_factura):
     ET.register_namespace('cfdi', "http://www.sat.gob.mx/cfd/3")
     ET.register_namespace('xsi', "http://www.w3.org/2001/XMLSchema-instance")
     ET.register_namespace('tfd', "http://www.sat.gob.mx/TimbreFiscalDigital")
-    ET.register_namespace('mabe', "https://recepcionfe.mabempresa.com/cfd/addenda/v1")
+    ET.register_namespace('mabe', "http://recepcionfe.mabempresa.com/cfd/addenda/v1")
 
     open_urlfile = urlopen(xml_factura)
     
