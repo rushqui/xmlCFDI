@@ -13,7 +13,7 @@ def generate_factura_addenda():
     except:
         print("Ya existe la carpeta 'docs_generados'")
 
-    ET.register_namespace('mabe', "http://recepcionfe.mabempresa.com/cfd/addenda/v1")
+    ET.register_namespace('mabe', "https://recepcionfe.mabempresa.com/cfd/addenda/v1")
 
     # namespcs =  {'factura_ns': 'http://www.sat.gob.mx/cfd/3',
     #             'mabe_ns': 'http://www.mabe.com.mx'}
@@ -26,7 +26,7 @@ def generate_factura_addenda():
     #root = ET.Element("{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Main")
 
     atrr_qname =  ET.QName('http://www.w3.org/2001/XMLSchema-instance', 'schemaLocation')
-    root = ET.Element('Factura',{atrr_qname: 'http://recepcionfe.mabempresa.com/cfd/addenda/v1 http://recepcionfe.mabempresa.com/cfd/addenda/v1/mabev1.xsd'})
+    root = ET.Element('Factura',{atrr_qname: 'https://recepcionfe.mabempresa.com/cfd/addenda/v1 https://recepcionfe.mabempresa.com/cfd/addenda/v1/mabev1.xsd'})
 
     #mab_factura = ET.SubElement(root,"{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Factura")
     
@@ -40,7 +40,7 @@ def generate_factura_addenda():
     root.set('referencia1',rootRead.get('Folio'))
 
 
-    mab_moneda = ET.SubElement(root,"{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Moneda")
+    mab_moneda = ET.SubElement(root,"{https://recepcionfe.mabempresa.com/cfd/addenda/v1}Moneda")
     mab_moneda.set('tipoMoneda', rootRead.get('Moneda'))
     total_str = rootRead.get('Total')
     #Se separan los pesos de los centavos
@@ -56,17 +56,17 @@ def generate_factura_addenda():
 
     mab_moneda.set('importeConLetra',total_text_str)
 
-    mab_proveedor = ET.SubElement(root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Proveedor")
+    mab_proveedor = ET.SubElement(root, "{https://recepcionfe.mabempresa.com/cfd/addenda/v1}Proveedor")
     mab_proveedor.set('codigo', '')
 
-    mab_entrega = ET.SubElement(root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Entrega")
+    mab_entrega = ET.SubElement(root, "{https://recepcionfe.mabempresa.com/cfd/addenda/v1}Entrega")
     planta_entrega = get_num_proveedor()
     mab_entrega.set('plantaEntrega', planta_entrega)
     mab_entrega.set('calle', 'INGENIEROS MILITARESx')
     mab_entrega.set('noExterior', '156')
     mab_entrega.set('codigoPostal', '11210')
 
-    mab_detalles = ET.SubElement(root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Detalles")
+    mab_detalles = ET.SubElement(root, "{https://recepcionfe.mabempresa.com/cfd/addenda/v1}Detalles")
 
     consecutive = 0
 
@@ -82,7 +82,7 @@ def generate_factura_addenda():
         print(concepto.get('Descripcion'))
         print(importe_flt)
         
-        mab_detalle = ET.SubElement(mab_detalles, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Detalle")
+        mab_detalle = ET.SubElement(mab_detalles, "{https://recepcionfe.mabempresa.com/cfd/addenda/v1}Detalle")
         mab_detalle.set('noLineaArticulo', str(consecutive))
         mab_detalle.set('codigoArticulo', '0')
 
@@ -101,21 +101,21 @@ def generate_factura_addenda():
         mab_detalle.set('importeSinIva', str(importe_flt))
         mab_detalle.set('importeConIva', str(importe_iva_flt))
 
-    mab_subtotal = ET.SubElement(root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Subtotal")
+    mab_subtotal = ET.SubElement(root, "{https://recepcionfe.mabempresa.com/cfd/addenda/v1}Subtotal")
     subtotal = rootRead.get('SubTotal')
     mab_subtotal.set('importe', subtotal)
 
-    mab_traslados = ET.SubElement(root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Traslados")
-    mab_traslado = ET.SubElement(mab_traslados, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Traslado")
+    mab_traslados = ET.SubElement(root, "{https://recepcionfe.mabempresa.com/cfd/addenda/v1}Traslados")
+    mab_traslado = ET.SubElement(mab_traslados, "{https://recepcionfe.mabempresa.com/cfd/addenda/v1}Traslado")
     mab_traslado.set('tipo', 'IVA')
     mab_traslado.set('tasa', '0.16')
     get_traslados = rootRead.find('{http://www.sat.gob.mx/cfd/3}Impuestos')
     total_traslados = get_traslados.get('TotalImpuestosTrasladados')
     mab_traslado.set('importe', total_traslados)
 
-    mab_retenciones = ET.SubElement(root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Retenciones")
+    mab_retenciones = ET.SubElement(root, "{https://recepcionfe.mabempresa.com/cfd/addenda/v1}Retenciones")
 
-    mab_total = ET.SubElement(root, "{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Total")
+    mab_total = ET.SubElement(root, "{https://recepcionfe.mabempresa.com/cfd/addenda/v1}Total")
 
     mab_total.set('importe', total_str)
 

@@ -69,4 +69,4 @@ def download_file_from_bucket(url_file):
     bucket = client.bucket(current_app.config['CLOUD_STORAGE_BUCKET'])
     blob = bucket.get_blob(url_file_list[4])
 
-    return send_file(io.BytesIO(blob.download_as_string()), attachment_filename = url_file_list[4], as_attachment=True, mimetype='application/xml')
+    return send_file(io.BytesIO(blob.download_as_string()), attachment_filename = url_file_list[4], as_attachment=True, mimetype='text/xml')

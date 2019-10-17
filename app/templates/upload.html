@@ -3,44 +3,42 @@
 {% block title %}Generar Addenda{% endblock %}
 {% block content %}
 
-<div class="main-container portada">
-		<div id="imgupload">
-	    </div>
-		
-		<div class="text">
-			<div class="card">
-	            <div class="card-body">
-	                
-	                    <div class="form-group">Seleccione los archivos para cargar</div>
-	                    <div class="form-group">
-	                    <p>
-							{% with messages = get_flashed_messages() %}
-							  {% if messages %}
-								<ul class=flashes>
-								{% for message in messages %}
-								  <li>{{ message }}</li>
-								{% endfor %}
-								</ul>
-							  {% endif %}
-							{% endwith %}
-						</p>
-	                	</div>
-	                <form method="post" action="/carga" enctype="multipart/form-data">
-	                	<div class="form-group">
-						    <dl>
-								<p>
-									<input type="file" class="form-control-file" name="files[]" multiple="true" autocomplete="off" required>
-								</p>
-						    </dl>
-						    <p>
-								<button type="submit" class="btn btn-primary" value="Generar">Generar</button>
-							</p>
+<div class="main-container">
+	<div class="container form" id="upload-form">
+		<div class="card">
+	        <div class="card-body">
+	            <div class="form-group">Seleccione los archivos para cargar</div>
+	            <div class="form-group">
+	            	<p>
+						{% with messages = get_flashed_messages() %}
+						  {% if messages %}
+							<ul class=flashes>
+							{% for message in messages %}
+							  <li>{{ message }}</li>
+							{% endfor %}
+							</ul>
+						  {% endif %}
+						{% endwith %}
+					</p>
+	            </div>
+	            <form method="post" action="/carga" enctype="multipart/form-data">
+	            	<div class="form-group">
+						<div class="custom-file">
+							<input type="file" class="custom-file-input" name="files[]" id="validatedCustomFile" multiple="true" onchange="getFilesNames()" required>
+							<label class="custom-file-label" for="validatedCustomFile" id="labelFilesLoad">Seleccionar archivos...</label>
+							<div class="invalid-feedback">Debe seleccionar los archivos para generar la addenda</div>
 						</div>
-					</form>	
-				</div>
+					    <!-- <dl>
+							<p>
+								<input type="file" class="form-control-file" name="files[]" multiple="true" autocomplete="off" required>
+							</p>
+					    </dl> -->
+						<button class="btn btn-primary" type="submit" value="Generar">Generar</button>
+					</div>
+				</form>	
 			</div>
-
 		</div>
+	</div>
 </div>
 
 {% endblock %}
