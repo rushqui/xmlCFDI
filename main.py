@@ -15,6 +15,7 @@ from mergeFacturas import _addenda_tag, _merge_facturas
 from common import wahio
 from app import create_app
 from urllib.request import urlopen
+from io import BytesIO
 
 
 app = create_app()
@@ -212,7 +213,7 @@ def generate_factura_addenda(files_list, num_proveedor):
     #     print("Ya existe la carpeta 'docs_generados'")
 
     ET.register_namespace('mabe', "https://recepcionfe.mabempresa.com/cfd/addenda/v1")
-
+    ET.register_namespace('xsi', "http://www.w3.org/2001/XMLSchema-instance")
     # namespcs =  {'factura_ns': 'http://www.sat.gob.mx/cfd/3',
     #             'mabe_ns': 'http://www.mabe.com.mx'}
 
@@ -238,15 +239,16 @@ def generate_factura_addenda(files_list, num_proveedor):
 
     #mab_factura = ET.SubElement(root,"{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Factura")
 
+    num_orden_compra = get_num_pedido(pdf_orden_compra)
+
     root.set('version', '1.0')
     root.set('tipoDocumento', 'FACTURA')
     root.set('folio', rootRead.get('Folio'))
     fecha = rootRead.get('Fecha').split('T')
     root.set('fecha', fecha[0])
-    num_orden_compra = get_num_pedido(pdf_orden_compra)
     root.set('ordenCompra', num_orden_compra)
     root.set('referencia1', rootRead.get('Folio'))
-    root.set('xsi:xmlns','http://www.w3.org/2001/XMLSchema-instance')
+  
 
     mab_moneda = ET.SubElement(
         root, "{https://recepcionfe.mabempresa.com/cfd/addenda/v1}Moneda")
@@ -336,8 +338,11 @@ def generate_factura_addenda(files_list, num_proveedor):
 
     # root.insert(1,body)
     xmlTree = ET.ElementTree(root)
-    xmlTree_string = ET.tostring(xmlTree.getroot(), encoding='utf-8', method='xml')
-    url_addenda_file = storage.upload_file(xmlTree_string, 'Addenda.xml', 'text/xml')
+    f = BytesIO()
+    xmlTree.write(f,encoding='utf-8', xml_declaration=True)
+    # xmlTree_string = ET.tostring(xmlTree.getroot(), encoding='utf-8', method='xml')
+    url_addenda_file = storage.upload_file(f.getvalue(), 'Addenda.xml', 'text/xml')
+
     # ET.dump(root)
     url_addendatag_file = _addenda_tag(xml_factura)
     xml_filename = _merge_facturas(rootRead.get('Folio'), url_addenda_file, url_addendatag_file)
