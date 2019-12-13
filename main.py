@@ -212,11 +212,13 @@ def generate_factura_addenda(files_list, num_proveedor):
     # except:
     #     print("Ya existe la carpeta 'docs_generados'")
 
+    #Se agregan los namespace que tendra el archivo xml
     ET.register_namespace('mabe', "https://recepcionfe.mabempresa.com/cfd/addenda/v1")
     ET.register_namespace('xsi', "http://www.w3.org/2001/XMLSchema-instance")
     # namespcs =  {'factura_ns': 'http://www.sat.gob.mx/cfd/3',
     #             'mabe_ns': 'http://www.mabe.com.mx'}
 
+    #de los archivos cargados se guardan en variables distitntas
     for file in files_list:
         if file.endswith('.xml'):
             xml_factura = file
@@ -225,16 +227,17 @@ def generate_factura_addenda(files_list, num_proveedor):
 
     open_urlfile = urlopen(xml_factura)
 
+    #Reading the file
     xmlTreeRead = ET.parse(open_urlfile)
-
     rootRead = xmlTreeRead.getroot()
+
     print(rootRead.get('Moneda'))
 
     # factura_raiz = root.findall('factura_ns:Comprobante', namespcs)
     #root = ET.Element("{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Main")
 
     atrr_qname = ET.QName('http://www.w3.org/2001/XMLSchema-instance', 'schemaLocation')
-    root = ET.Element('Factura', {
+    root = ET.Element('{https://recepcionfe.mabempresa.com/cfd/addenda/v1}Factura', {
                       atrr_qname: 'https://recepcionfe.mabempresa.com/cfd/addenda/v1 https://recepcionfe.mabempresa.com/cfd/addenda/v1/mabev1.xsd'})
 
     #mab_factura = ET.SubElement(root,"{http://recepcionfe.mabempresa.com/cfd/addenda/v1}Factura")
@@ -339,7 +342,7 @@ def generate_factura_addenda(files_list, num_proveedor):
     # root.insert(1,body)
     xmlTree = ET.ElementTree(root)
     f = BytesIO()
-    xmlTree.write(f,encoding='utf-8', xml_declaration=True)
+    xmlTree.write(f,encoding='utf8', xml_declaration=True)
     # xmlTree_string = ET.tostring(xmlTree.getroot(), encoding='utf-8', method='xml')
     url_addenda_file = storage.upload_file(f.getvalue(), 'Addenda.xml', 'text/xml')
 

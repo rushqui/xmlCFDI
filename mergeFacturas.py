@@ -6,9 +6,9 @@ import requests
 from io import BytesIO
 
 def _addenda_tag(xml_factura):
-    ET.register_namespace('cfdi', "http://www.sat.gob.mx/cfd/3")
+    #ET.register_namespace('cfdi', "http://www.sat.gob.mx/cfd/3")
     # ET.register_namespace('xsi', "http://www.w3.org/2001/XMLSchema-instance")
-    ET.register_namespace('tfd', "http://www.sat.gob.mx/TimbreFiscalDigital")
+    #ET.register_namespace('tfd', "http://www.sat.gob.mx/TimbreFiscalDigital")
     # ET.register_namespace('mabe', "https://recepcionfe.mabempresa.com/cfd/addenda/v1")
 
     open_urlfile = urlopen(xml_factura)
@@ -18,7 +18,7 @@ def _addenda_tag(xml_factura):
     root_factura = xml_factura_read.getroot()
     ET.SubElement(root_factura,"{http://www.sat.gob.mx/cfd/3}Addenda")
     f = BytesIO()
-    xml_factura_read.write(f, encoding='utf-8', xml_declaration=True)
+    xml_factura_read.write(f, encoding='utf8', xml_declaration=True)
     # root_factura_string = ET.tostring(root_factura, encoding='utf-8', method='xml')
     url_addendatag_file = storage.upload_file(f.getvalue(), 'FacturaTagAddenda.xml', 'text/xml')
     return url_addendatag_file
@@ -38,7 +38,7 @@ def _merge_facturas(folio, url_addenda_file, url_addendatag_file):
     # open_url_addenda.encoding = 'utf-8'
     # print(requests.get(url_addenda_file).encoding)
 
-    parser = ET.XMLParser(encoding="utf-8")
+    parser = ET.XMLParser(encoding="utf8")
 
     xml_addenda = ET.parse(open_url_addenda)
     print(ET.tostring(xml_addenda.getroot()))
@@ -63,7 +63,7 @@ def _merge_facturas(folio, url_addenda_file, url_addendatag_file):
     # print (insertion_point)
     
     f = BytesIO()
-    xml_factura_read.write(f,encoding='utf-8', xml_declaration=True)
+    xml_factura_read.write(f,encoding='utf8', xml_declaration=True)
     # xml_addenda_merged = ET.tostring(xml_factura_read, encoding='utf-8', method='xml')
 
     url_xmlend_file = storage.upload_file(f.getvalue(), xmlfile_name, 'text/xml')
